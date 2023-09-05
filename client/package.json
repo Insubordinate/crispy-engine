@@ -2,13 +2,19 @@
   "name": "proj",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "react/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "parcel": "^2.9.3"
+    "parcel": "^2.9.3",
+    "process": "^0.11.10"
+  },
+  "dependencies": {
+    "package": "^1.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }
