@@ -1,36 +1,105 @@
-const handleAddUser = (e,name,email) => {
-    e.preventDefault()
+const handleGetUser = ({userEvent,email,dataFunc,pageFunc}) => {
+    userEvent.preventDefault()
 
-    fetch('http://127.0.0.1:5000/user',{
-        method:'POST',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-        },
-        body:JSON.stringify({name:name,email:email})
-    })
+    if (email === null) {
+        fetch('http://127.0.0.1:5000/user', {
+            method: 'GET',
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data)
+                dataFunc(data)
+                pageFunc('displayAllUsers')
+            })
+            .catch((err) => console.error(err))
+    }
+    else {
+        fetch('http://127.0.0.1:5000/user?'+`email=${email}`,{
+            method:'GET',
+        })
+        .then((res)=>res.json())
+        .then((data)=>{
+                console.log(data)
+                if(data.status =='failure'){
+                    dataFunc(data)
+                    pageFunc('errorPage')
+                }
+                else{
+                    dataFunc(data)
+                    pageFunc('displayUser')
+                }
 
-    .then((res)=>res.json())
-    .then((data)=>{console.log(data)})
-    .catch((err)=>console.error(err))
+        })
+        .catch((err)=>console.error(err))
+    }
+
+
+}
+const handleAddUser = ({userEvent,email,name,dataFunc,pageFunc}) => {
+    userEvent.preventDefault()
+        fetch('http://127.0.0.1:5000/user?'+`email=${email}`+`&name=${name}`,{
+            method:'POST',
+        })
+        .then((res)=>res.json())
+        .then((data)=>{
+                console.log(data)
+                if(data.status =='failure'){
+                    dataFunc(data)
+                    pageFunc('errorPage')
+                }
+                else{
+                    dataFunc(data)
+                    pageFunc('displayUserSuccess')
+                }
+
+        })
+        .catch((err)=>console.error(err))
 }
 
-const handleDeleteUser = (e,email) => {
-    e.preventDefault()
-
-    fetch('http://127.0.0.1:5000/user',{
+const handleDeleteUser = ({userEvent,email,dataFunc,pageFunc}) => {
+    userEvent.preventDefault()
+    fetch('http://127.0.0.1:5000/user?'+`email=${email}`,{
         method:'DELETE',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-        },
-        body:JSON.stringify({email:email})
-    })
+        })
+        .then((res)=>res.json())
+        .then((data)=>{
+                console.log(data)
+                if(data.status =='failure'){
+                    dataFunc(data)
+                    pageFunc('errorPage')
+                }
+                else{
+                    dataFunc(data)
+                    pageFunc('displayUserDeleteSuccess')
+                }
+        })
+        .catch((err)=>console.error(err))
 
-    .then((res)=>res.json())
-    .then((data)=>{console.log(data)})
-    .catch((err)=>console.error(err))
+
 }
 
 
-module.exports = {handleAddUser,handleDeleteUser}
+const handleUpdateUser = ({userEvent,email,name,newName,newEmail,dataFunc,pageFunc}) => {
+    userEvent.preventDefault()
+    fetch('http://127.0.0.1:5000/user?'+`email=${email}`+`&name=${name}`+`&newName=${newName}`+`&newEmail=${newEmail}`,{
+        method:'PUT',
+        })
+        .then((res)=>res.json())
+        .then((data)=>{
+                console.log(data)
+                if(data.status =='failure'){
+                    dataFunc(data)
+                    pageFunc('errorPage')
+                }
+                else{
+                    dataFunc(data)
+                    pageFunc('displayUserEditSuccess')
+                }
+
+        })
+        .catch((err)=>console.error(err))
+}
+
+
+
+module.exports = {handleAddUser,handleDeleteUser,handleGetUser,handleUpdateUser}

@@ -1,61 +1,1 @@
-import React, { useState, useEffect } from 'react';
-import {handleAddUser,handleDeleteUser} from './api_calls'
-export const  App = () => {
-
-    const [page,setPage] = useState('default')
-    const [name,setName] = useState('')
-    const [email,setEmail] = useState('')
-
-
-
-    if (page==='default') {
-
-      return (
-          <div>
-            <h1>Welcome to the DB Management Screen</h1>
-
-            <button onClick={(e) => setPage('addUser')}>Add User</button>
-            <button onClick={(e) => setPage('deleteUser')}>Delete User</button>
-            <button onClick={(e) => setPage('findUser')}>Find User</button>
-            <button onClick={(e) => setPage('listUsers')}>List All Users</button>
-
-          </div>
-      )
-    }
-    else if (page==='addUser'){
-        return (
-            <div>
-                <form onSubmit={(e) => handleAddUser(e,name,email)}>
-                    <input type="text" onChange={(e) => setName(e.target.value)} placeholder='name'/>
-                    <input type="text" onChange={(e) => setEmail(e.target.value)} placeholder='email'/>
-                    <input type='submit' value='Submit User'></input>
-                </form>
-
-                <button onClick={(e)=>setPage('default')}>Go Back</button>
-            </div>
-        )
-    }
-
-    else if (page==='deleteUser'){
-        return (
-            <div>
-                <form onSubmit={(e) => handleDeleteUser(e,email)}>
-                    <input type="text" onChange={(e) => setEmail(e.target.value)} placeholder='email'/>
-                    <input type='submit' value='Delete User'></input>
-                </form>
-                <button onClick={(e)=>setPage('default')}>Go Back</button>
-            </div>
-        )
-    }
-
-    else if (page==='findUser'){
-
-    }
-    else if (page==='listUsers'){
-
-    }
-}
-
-
-
-// Set the default appearance
+import React, { useState, useEffect } from 'react';import {handleAddUser,handleDeleteUser,handleGetUser,handleUpdateUser} from './api_calls'export const  App = () => {    const [page,setPage] = useState('default')    const [name,setName] = useState('')    const [email,setEmail] = useState('')    const [newName,setNewName] = useState('')    const [newEmail,setNewEmail] = useState('')    const [returnedData,setReturnedData] = useState('')    if (page==='default') {      return (          <div>            <h1>Welcome to the DB Management Screen</h1>            <button onClick={(e) => setPage('getAllUsers')}>Get All Users</button>            <button onClick={(e) => setPage('getUser')}>Find User</button>            <button onClick={(e) => setPage('addUser')}>Add User</button>            <button onClick={(e) => setPage('updateUser')}>Update User</button>            <button onClick={(e) => setPage('deleteUser')}>Delete User</button>          </div>      )    }    else if (page==='errorPage'){        return (            <div>                  {                      Object.keys(returnedData).map( (item)=>                        <p> {item} : {returnedData[item]} </p>                      )                  }                <button onClick={(e)=>setPage('default')}>Go Back</button>            </div>        )    }    else if (page==='getAllUsers'){        return (            <div>                <form onSubmit={(e) => handleGetUser({userEvent:e,email:null,dataFunc:setReturnedData,pageFunc:setPage})}>                    <input type='submit' value='Get All Users'></input>                </form>                <button onClick={(e)=>setPage('default')}>Go Back</button>            </div>        )    }    else if(page==='displayAllUsers'){                return (            <div>                {                    returnedData.response.map( (user)=>                        <p>{user.name} {user.email} {user.id} </p>                    )                }                <button onClick={(e)=>setPage('default')}>Go Back</button>            </div>        )    }    else if (page==='getUser'){        return (            <div>                <form onSubmit={(e) => handleGetUser({userEvent:e,email:email,dataFunc:setReturnedData,pageFunc:setPage})}>                    <input type="text" onChange={(e) => setEmail(e.target.value)} placeholder='email'/>                    <input type='submit' value='Get User'></input>                </form>                <button onClick={(e)=>setPage('default')}>Go Back</button>            </div>        )    }    else if(page==='displayUser'){                return (            <div>                {                    returnedData.response.map((user)=>                        <p>{user.name} {user.email} {user.id} </p>                    )                }                <button onClick={(e)=>setPage('default')}>Go Back</button>            </div>        )    }    else if (page==='addUser'){        return (            <div>                <form onSubmit={(e) => handleAddUser({userEvent:e,email:email,name:name,dataFunc:setReturnedData,pageFunc:setPage})}>                    <input type="text" onChange={(e) => setName(e.target.value)} placeholder='name'/>                    <input type="text" onChange={(e) => setEmail(e.target.value)} placeholder='email'/>                    <input type='submit' value='Submit User'></input>                </form>                <button onClick={(e)=>setPage('default')}>Go Back</button>            </div>        )    }    else if (page==='displayUserSuccess'){        return (            <div>                  {                      Object.keys(returnedData).map( (item)=>                        <p> {item} : {returnedData[item]} </p>                      )                  }                <button onClick={(e)=>setPage('default')}>Go Back</button>            </div>        )    }    else if (page==='updateUser'){        return (            <div>                <form onSubmit={(e) => handleUpdateUser({userEvent:e,email:email,name:name,newEmail:newEmail,newName:newName,dataFunc:setReturnedData,pageFunc:setPage})}>                    <input type="text" onChange={(e) => setName(e.target.value)} placeholder='name'/>                    <input type="text" onChange={(e) => setEmail(e.target.value)} placeholder='email'/>                    <input type="text" onChange={(e) => setNewName(e.target.value)} placeholder='new name'/>                    <input type="text" onChange={(e) => setNewEmail(e.target.value)} placeholder='new email'/>                    <input type='submit' value='Update User'></input>                </form>                <button onClick={(e)=>setPage('default')}>Go Back</button>            </div>        )    }    else if (page==='displayUserEditSuccess'){        return (            <div>                  {                      Object.keys(returnedData).map( (item)=>                        <p> {item} : {returnedData[item]} </p>                      )                  }                <button onClick={(e)=>setPage('default')}>Go Back</button>            </div>        )    }    else if (page==='deleteUser'){        return (            <div>                <form onSubmit={(e) => handleDeleteUser({userEvent:e,email:email,dataFunc:setReturnedData,pageFunc:setPage})}>                    <input type="text" onChange={(e) => setEmail(e.target.value)} placeholder='email'/>                    <input type='submit' value='Delete User'></input>                </form>                <button onClick={(e)=>setPage('default')}>Go Back</button>            </div>        )    }    else if (page==='displayUserDeleteSuccess'){        return (            <div>                  {                      Object.keys(returnedData).map( (item)=>                        <p> {item} : {returnedData[item]} </p>                      )                  }                <button onClick={(e)=>setPage('default')}>Go Back</button>            </div>        )    }}// Set the default appearance
